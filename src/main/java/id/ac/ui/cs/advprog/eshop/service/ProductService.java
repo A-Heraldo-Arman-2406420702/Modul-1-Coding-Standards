@@ -13,4 +13,6 @@ public interface ProductService {
     public Product findById(String productId);
 
     public void edit(Product product);
+
+    public void delete(String productId);
 }
