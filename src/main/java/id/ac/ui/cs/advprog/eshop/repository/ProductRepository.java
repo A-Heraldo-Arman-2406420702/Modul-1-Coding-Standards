@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import id.ac.ui.cs.advprog.eshop.model.Product;
 
+@Repository
 public class ProductRepository {
 
     private List<Product> productData = new ArrayList<>();
