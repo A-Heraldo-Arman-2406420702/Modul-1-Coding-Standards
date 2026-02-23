@@ -1,0 +1,36 @@
+name: PMD Code Analysis
+
+on:
+  push:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  pmd-analysis:
+    name: Run PMD
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java toolchain
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Run PMD analysis
+        uses: pmd/pmd-github-action@v2
+        with:
+          version: '7.0.0-rc4'
+          sourcePath: 'src/main/java'
+          rulesets: 'rulesets/java/quickstart.xml'
+          analyzeModifiedFilesOnly: false
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: pmd-report.sarif
