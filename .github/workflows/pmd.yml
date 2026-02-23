@@ -1,8 +1,11 @@
 name: PMD Code Analysis
 
-
 on:
   push:
+
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
   pmd-analysis:
@@ -21,14 +24,13 @@ jobs:
       - name: Run PMD analysis
         uses: pmd/pmd-github-action@v2
         with:
-
           version: '7.0.0-rc4'
           sourcePath: 'src/main/java'
           rulesets: 'rulesets/java/quickstart.xml'
           analyzeModifiedFilesOnly: false
 
-      - name: Upload SARIF file (Optional, for GitHub Security tab)
-        uses: github/codeql-action/upload-sarif@v3
-        if: always() # Tetap upload meskipun PMD menemukan masalah
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
         with:
           sarif_file: pmd-report.sarif
