@@ -1,16 +1,19 @@
 package id.ac.ui.cs.advprog.eshop.repository;
 
-import id.ac.ui.cs.advprog.eshop.model.Product;
+import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Iterator;
-
-import static org.junit.jupiter.api.Assertions.*;
+import id.ac.ui.cs.advprog.eshop.model.Product;
 
 @ExtendWith(MockitoExtension.class)
 class ProductRepositoryTest {
@@ -128,5 +131,28 @@ class ProductRepositoryTest {
         Product result = productRepository.delete("apalah");
 
         assertNull(result);
+    }
+
+    @Test
+    void testFindByIdIfMoreThanOneProduct() {
+        Product product1 = new Product();
+        product1.setProductId("id-1");
+        product1.setProductName("Produk 1");
+        product1.setProductQuantity(10);
+        productRepository.create(product1);
+
+        Product product2 = new Product();
+        product2.setProductId("id-2");
+        product2.setProductName("Produk 2");
+        product2.setProductQuantity(20);
+        productRepository.create(product2);
+
+        Product resultFound = productRepository.findById("id-2");
+        assertNotNull(resultFound);
+        assertEquals("id-2", resultFound.getProductId());
+        assertEquals("Produk 2", resultFound.getProductName());
+
+        Product resultNotFound = productRepository.findById("id-ngasal");
+        assertNull(resultNotFound);
     }
 }
