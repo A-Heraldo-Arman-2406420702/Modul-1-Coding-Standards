@@ -1,3 +1,5 @@
+# Module 1
+
 ## Reflection 1
 
 ### Clean Code Principles & Secure Coding Practices
@@ -114,3 +116,20 @@ Menurut analisis saya, implementasi yang telah dilakukan sudah memenuhi definisi
 
 2.  **Continuous Deployment:** Dengan menggunakan Railway yang terhubung langsung ke repositori GitHub, setiap perubahan yang lolos pengujian pada _branch_ utama (dalam kasus ini main) akan langsung di-_build_ menggunakan Docker dan di-_deploy_ ke _environment_ publik secara otomatis. Hal ini memungkinkan proses rilis fitur atau perbaikan ke tangan pengguna berjalan sangat cepat dan tanpa intervensi manual yang rumit. URL deployment dapat diakses di [eshop-adpro.heraldoarman.com](https://eshop-adpro.heraldoarman.com/).
 
+
+
+# Module 3 - Reflection
+
+
+**1) Jelaskan prinsip apa saja yang kamu terapkan pada proyekmu!**
+- **Single Responsibility Principle (SRP):** Prinsip ini menyatakan bahwa sebuah kelas hanya boleh memiliki satu alasan untuk berubah (satu tanggung jawab). Saya memisahkan `CarController` dari file `ProductController.java` ke dalam filenya sendiri. Sekarang, masing-masing *controller* memiliki tanggung jawab yang tunggal: `ProductController` khusus menangani *routing* untuk produk, dan `CarController` khusus menangani *routing* untuk mobil.
+- **Liskov Substitution Principle (LSP):** Prinsip ini menyatakan bahwa objek dari *superclass* harus bisa digantikan dengan objek dari *subclass*-nya tanpa memengaruhi kebenaran dan konsistensi program. Saya menghapus deklarasi `extends ProductController` pada `CarController`. Sebuah `CarController` pada dasarnya bukanlah *subclass* sejati dari `ProductController`, sehingga pewarisan ini keliru dan dapat menyebabkan *behavior* yang tidak konsisten jika objeknya saling dipertukarkan.
+- **Dependency Inversion Principle (DIP):** Prinsip ini menekankan agar kelas bergantung pada abstraksi (*interface* atau *abstract class*), bukan pada implementasi atau *concrete class*. Saya mengubah tipe objek yang di-*inject* pada `CarController`. Sebelumnya bergantung pada kelas konkret `CarServiceImpl`, sekarang diubah menjadi bergantung pada *interface* `CarService`.
+
+**2) Jelaskan keuntungan menerapkan prinsip SOLID pada proyekmu berikan contohnya.**
+- **Meningkatkan Maintainability (Kemudahan Pemeliharaan):** Dengan menerapkan SRP, kelas menjadi lebih kecil, terstruktur, serta lebih mudah dinavigasi dan dikelola dibandingkan menggunakan satu file monolitik yang panjang. Sebagai contoh, jika ada perubahan kebutuhan pada fitur *Product*, saya hanya perlu memodifikasi kode di `ProductController` tanpa khawatir merusak atau menyentuh fitur *Car*.
+- **Meningkatkan Fleksibilitas & Decoupling:** Dengan menerapkan DIP (bergantung pada *interface* `CarService` alih-alih `CarServiceImpl`), modul level tinggi (*controller*) menjadi tidak terikat langsung (*loosely coupled*) dengan modul level rendah (*service/repository*). Contohnya, jika di masa depan kita ingin mengubah cara penyimpanan data mobil dengan membuat kelas baru (misal `CarServiceDatabaseImpl`), kita sama sekali tidak perlu mengubah kode yang ada di dalam `CarController`.
+
+**3) Jelaskan kerugian jika tidak menerapkan prinsip SOLID pada proyekmu berikan contohnya.**
+- **Kode Menjadi Rumit dan Sulit Dipelihara:** Jika kita mengabaikan SRP dengan menggabungkan banyak fungsi ke dalam satu kelas tunggal (seperti `ProductController` yang sebelumnya juga mengurus *Car*), file tersebut akan menjadi sangat panjang dan sulit dibaca. Contoh praktisnya: jika ada dua *developer* yang mengerjakan fitur mobil dan produk secara bersamaan pada satu file `ProductController.java`, risiko terjadinya bentrok kode (*merge conflict*) akan sangat tinggi
+- **Sistem Menjadi *Tightly Coupled* (Sangat Terikat):** Jika kita mengabaikan DIP dan tetap memanggil `CarServiceImpl` secara langsung, *controller* akan sangat bergantung pada detail implementasi *service* tersebut. Contohnya, jika *constructor* atau detail internal dari `CarServiceImpl` harus diubah secara drastis, `CarController` kemungkinan besar akan ikut rusak (*error*) dan memaksa kita untuk merombak kodenya juga
